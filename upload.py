@@ -3,11 +3,10 @@ from datetime import datetime
 from neo4j import GraphDatabase
 import pm4py
 import pandas as pd
-from tqdm import tqdm
 
 
 # CREATE VBEL MAP FOR VBFA TABLE
-# This might need to be altered/replace when one wants to upload another SAP table
+# This might needs to be altered/replace when one wants to upload another SAP table
 vbtypn_map = {'A': 'Inquiry',
               'B': 'Quotation',
               'C': 'Order',
@@ -85,7 +84,7 @@ def upload_vbfa(path, clear):
     session = db_connection.session()
     print("Established DB Connection!")
 
-    # Clear Data Bank if needed
+    # Clear data base if needed
     if clear:
         session.run("CALL apoc.periodic.iterate("
                     " 'MATCH (n) RETURN n', "
@@ -209,7 +208,7 @@ def upload_ocel(path, clear):
     session = db_connection.session()
     print("Established DB Connection!")
 
-    # Clear Data Bank if needed
+    # Clear data base if specified
     if clear:
         session.run("MATCH(n)"
                     "DETACH DELETE(n)")
