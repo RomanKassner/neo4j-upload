@@ -250,20 +250,6 @@ def upload_ocel(path, clear):
 
     db_connection.close()
 
-
-def upload_vbfa_sqlite():
-    parquet_path = "C:/Users/PC/OneDrive/Desktop/Dokumente/Uni/BA/eventlogs/VBFA.parquet"
-    table_name = "VBFA"
-    query = f"SELECT * from {table_name}"
-
-    db_conn = sqlite3.connect(database="C:/Users/PC/OneDrive/Desktop/Dokumente/Uni/BA/databases/vbfa.sqlite")
-
-    df_parquet = pd.read_parquet(parquet_path)
-    num_rows_inserted = df_parquet.to_sql(table_name, db_conn, index=False)
-
-    cursor = db_conn.execute(query)
-
-
 if __name__ == '__main__':
     path_ocel = "C:/Users/PC/OneDrive/Desktop/Dokumente/Uni/BA/eventlogs/o2c.xmlocel"
     path_vbfa = "C://Users//PC//OneDrive//Desktop//Dokumente//Uni//BA//eventlogs//VBFA.parquet"
