@@ -1,11 +1,8 @@
-
-
 from datetime import datetime
 
 from neo4j import GraphDatabase
 import pm4py
 import pandas as pd
-import sqlite3
 from tqdm import tqdm
 
 
@@ -120,7 +117,7 @@ def upload_vbfa(path, clear):
 
     vbeln_list = list(vbeln.values)
 
-    for i in tqdm(range(0, len(vbeln))):
+    for i in range(0, len(vbeln)):
         # Subsequent sales and distribution document
         doc_num = vbeln[i]
 
@@ -250,7 +247,12 @@ def upload_ocel(path, clear):
 
     db_connection.close()
 
+
 if __name__ == '__main__':
+    # Here one (or both) functions are called. The paths have to be appropriately changed. One can set the parameter
+    # clear in both functions to clear the database, before uploading from the specified path.
+
     path_ocel = "C:/Users/PC/OneDrive/Desktop/Dokumente/Uni/BA/eventlogs/o2c.xmlocel"
     path_vbfa = "C://Users//PC//OneDrive//Desktop//Dokumente//Uni//BA//eventlogs//VBFA.parquet"
+
     upload_ocel(path_ocel, clear=True)
