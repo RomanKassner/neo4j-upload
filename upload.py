@@ -5,8 +5,8 @@ import pm4py
 import pandas as pd
 
 
-# CREATE VBEL MAP FOR VBFA TABLE
-# This might needs to be altered/replace when one wants to upload another SAP table
+# Create the map for abbreviations used in the SAP VBFA table's VEBLN field to their entire names.
+# This might needs to be altered/replace when one wants to upload another SAP table.
 vbtypn_map = {'A': 'Inquiry',
               'B': 'Quotation',
               'C': 'Order',
@@ -84,7 +84,7 @@ def upload_vbfa(path, clear):
     session = db_connection.session()
     print("Established DB Connection!")
 
-    # Clear data base if needed
+    # Clear database if needed
     if clear:
         session.run("CALL apoc.periodic.iterate("
                     " 'MATCH (n) RETURN n', "
@@ -95,24 +95,24 @@ def upload_vbfa(path, clear):
             session.run("DROP INDEX " + index[1])
         print("Cleaned DB!")
 
-    # Read VBFA table
-    vbfa_table = pd.read_parquet(path)
-    print("Read VBFA table!")
+    # Read SAP table
+    sap_table = pd.read_parquet(path)
+    print("Read SAP table!")
 
-    # Create indices to speed uplaod/merge query up
+    # Create indices to speed upload/merge query up
     if clear:
         session.run("CREATE INDEX d_num_dex FOR (d:Document) ON (d.d_num)")
         session.run("CREATE INDEX d_type_dex FOR (d:Document) ON (d.d_type)")
 
-    vbeln = vbfa_table.get("VBELN")
-    mandt = vbfa_table.get("MANDT")
-    vbtyp_n = vbfa_table.get("VBTYP_N")
-    posn_v = vbfa_table.get("POSNV")
-    posn_n = vbfa_table.get("POSNN")
-    erdat = vbfa_table.get("ERDAT")
-    erzet = vbfa_table.get("ERZET")
-    vbelv = vbfa_table.get("VBELV")
-    vbtyp_v = vbfa_table.get("VBTYP_V")
+    vbeln = sap_table.get("VBELN")
+    mandt = sap_table.get("MANDT")
+    vbtyp_n = sap_table.get("VBTYP_N")
+    posn_v = sap_table.get("POSNV")
+    posn_n = sap_table.get("POSNN")
+    erdat = sap_table.get("ERDAT")
+    erzet = sap_table.get("ERZET")
+    vbelv = sap_table.get("VBELV")
+    vbtyp_v = sap_table.get("VBTYP_V")
 
     vbeln_list = list(vbeln.values)
 
