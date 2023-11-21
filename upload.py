@@ -9,7 +9,8 @@ import sqlite3
 from tqdm import tqdm
 
 
-# CREATE VBEL MAP
+# CREATE VBEL MAP FOR VBFA TABLE
+# This might need to be altered/replace when one wants to upload another SAP table
 vbtypn_map = {'A': 'Inquiry',
               'B': 'Quotation',
               'C': 'Order',
@@ -82,7 +83,7 @@ vbtypn_map = {'A': 'Inquiry',
 
 
 def upload_vbfa(path, clear):
-    # Establish DB connection
+    # Establish DB connection with Neo4j
     db_connection = GraphDatabase.driver(uri="bolt://localhost:7687", auth=("neo4j", "12345678"))
     session = db_connection.session()
     print("Established DB Connection!")
@@ -171,6 +172,10 @@ def upload_vbfa(path, clear):
                     , upload_date_time=upload_date_time, prev_client=prev_client,
                     pos_sub=pos_sub, pos_prev=pos_prev)
 
+        # The following are suggestions for queries that create nodes for each item and client. Note that this creates
+        # a tremendous amount of relationships. Therefore, we avoided creating such nodes and put the information into
+        # each event-to-object relationship.
+
         # Creates individual client nodes
         # session.run("MERGE(d:Document {d_num: $doc_num, d_type: $doc_type}) "
         #             "WITH d "
@@ -202,7 +207,7 @@ def upload_vbfa(path, clear):
 
 
 def upload_ocel(path, clear):
-    # Establish DB connection
+    # Establish DB connection with Neo4j
     db_connection = GraphDatabase.driver(uri="bolt://localhost:7687", auth=("neo4j", "12345678"))
     session = db_connection.session()
     print("Established DB Connection!")
