@@ -1,6 +1,9 @@
+import os
 from datetime import datetime
 
 from neo4j import GraphDatabase
+from py2neo import Graph
+from pathvalidate import sanitize_filepath
 import pm4py
 import pandas as pd
 
@@ -251,7 +254,38 @@ if __name__ == '__main__':
     # Here one (or both) functions are called. The paths have to be appropriately changed. One can set the parameter
     # clear in both functions to clear the database, before uploading from the specified path.
 
-    path_ocel = "C:/Users/PC/OneDrive/Desktop/Dokumente/Uni/BA/eventlogs/o2c.xmlocel"
-    path_vbfa = "C://Users//PC//OneDrive//Desktop//Dokumente//Uni//BA//eventlogs//VBFA.parquet"
+    try:
+        graph = Graph(uri="bolt://localhost:7687", auth=("neo4j", "12345678"))
+        choice = input('Do you wish to clean your current database before uploading?\n')
+        if choice.upper() in ["YES", "Y"]:
+            choice = True
+        elif choice.upper() in ["NO", "N"]:
+            choice = False
+        else:
+            print("Not a valid choice! Please try again.")
+            exit()
 
-    upload_ocel(path_ocel, clear=True)
+    except Exception:
+        print('No instance of Neo4j found! Please ensure the Neo4j database is running and try again.')
+        exit()
+
+    path = input("Do you wish to upload an OCEL or a SAP log to the current Neo4j instance? "
+                 "Type OCEL or SAP:\n")
+
+    if path.upper() == "OCEL":
+        path_ocel = input("Please provide the path of your OCEL log:\n")
+        if not os.path.exists(path_ocel):
+            print("Path not found!")
+            exit()
+        else:
+            upload_ocel(path_ocel, choice)
+    elif path.upper() == "SAP":
+        path_sap = input("Please provide the path of your SAP table:\n")
+        if not os.path.exists(path_sap):
+            print("Path not found!")
+            exit()
+        else:
+            upload_vbfa(path_sap, choice)
+    else:
+        print("Invalid choice! Only OCEL and SAP are available. Please try again!")
+        exit()
